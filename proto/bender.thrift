@@ -26,6 +26,7 @@ struct ConstantSchema {
 
 struct SequenceSchema {
     1: required string sequence_id
+    2: optional i64 minimum
 }
 
 service Bender {
