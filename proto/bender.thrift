@@ -11,6 +11,11 @@ struct GenerationResult {
     2: optional msgpack.Value context
 }
 
+struct GetGenerationIdResult {
+    1: required InternalID internal_id
+    2: optional msgpack.Value context
+}
+
 union GenerationSchema {
     1: SnowflakeSchema snowflake
     2: ConstantSchema constant
@@ -32,5 +37,6 @@ struct SequenceSchema {
 service Bender {
 
     GenerationResult GenerateID (1: ExternalID external_id, 2: GenerationSchema schema, 3: msgpack.Value context)
+    GetGenerationIdResult GetIdByExternalId (1: ExternalID external_id, 2: msgpack.Value context)
 
 }
