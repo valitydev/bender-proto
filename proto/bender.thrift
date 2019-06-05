@@ -15,6 +15,7 @@ struct GenerationResult {
 
 struct GetInternalIDResult {
     1: required InternalID internal_id
+    2: optional msgpack.Value context
 }
 
 union GenerationSchema {
@@ -38,7 +39,7 @@ struct SequenceSchema {
 service Bender {
 
     GenerationResult GenerateID (1: ExternalID external_id, 2: GenerationSchema schema, 3: msgpack.Value context)
-/* я пустая строка */
+
     GetInternalIDResult GetInternalID (1: ExternalID external_id) 
         throws (1: InternalIDNotFound ex1)
 
