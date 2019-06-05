@@ -15,7 +15,7 @@ struct GenerationResult {
 
 struct GetInternalIDResult {
     1: required InternalID internal_id
-    2: optional msgpack.Value context
+    2: required msgpack.Value context
 }
 
 union GenerationSchema {
