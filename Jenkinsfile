@@ -15,10 +15,8 @@ build('bender-proto', 'docker-host') {
     }
 
     pipeDefault() {
-
         runStage('compile') {
             withGithubPrivkey {
-                sh "make submodules"
                 sh "make wc_compile"
             }
         }

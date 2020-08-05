@@ -7,7 +7,7 @@ UTILS_PATH := build_utils
 TEMPLATES_PATH := .
 
 # Name of the service
-SERVICE_NAME := bender_proto
+SERVICE_NAME := bender-proto
 
 # Build image tag to be used
 BUILD_IMAGE_TAG := b04c5291d101132e53e578d96e1628d2e6dab0c0
@@ -32,7 +32,7 @@ submodules: $(SUBTARGETS)
 rebar-update:
 	$(REBAR) update
 
-compile: submodules
+compile: submodules rebar-update
 	$(REBAR) compile
 
 clean:
