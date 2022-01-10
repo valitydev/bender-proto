@@ -1,4 +1,4 @@
-namespace java com.rbkmoney.bender
+namespace java dev.vality.bender
 namespace erlang bender
 
 include "proto/msgpack.thrift"
