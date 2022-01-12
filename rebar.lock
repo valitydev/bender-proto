@@ -1,4 +1,4 @@
 [{<<"msgpack_proto">>,
-  {git,"https://github.com/rbkmoney/msgpack-proto.git",
+  {git,"https://github.com/valitydev/msgpack-proto.git",
        {ref,"ec15d5e854ea60c58467373077d90c2faf6273d8"}},
   0}].
