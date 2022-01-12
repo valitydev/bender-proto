@@ -31,9 +31,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.rbkmoney</groupId>
+            <groupId>dev.vality</groupId>
             <artifactId>msgpack-proto</artifactId>
-            <version>1.7-ec15d5e</version>
+            <version>1.9-e8a931b</version>
         </dependency>
         <dependency>
             <groupId>javax.annotation</groupId>
