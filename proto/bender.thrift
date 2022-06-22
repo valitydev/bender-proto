@@ -1,5 +1,5 @@
 namespace java dev.vality.bender
-namespace erlang bender
+namespace erlang bender.bender
 
 include "proto/msgpack.thrift"
 
