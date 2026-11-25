@@ -12,3 +12,4 @@ rebar3.crashdump
 include/*.hrl
 src/*.erl
 *.iml
+mise.toml

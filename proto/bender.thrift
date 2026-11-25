@@ -14,6 +14,17 @@ include "proto/msgpack.thrift"
 typedef string ExternalID
 
 /**
+* Identifier provided directly by the issuer (owner).
+* The issuer guarantees its uniqueness within their own domain and scope.
+*/
+typedef string PlainExternalID
+
+/**
+* Either InternalID or PlainExternalID
+*/
+typedef string BaseID
+
+/**
 * Identifier of respective process, actor or object in the local system, to be used internally.
 * Uniquely bound with a single external identifier.
 */
@@ -86,6 +97,81 @@ struct SequenceSchema {
     2: optional i64 minimum
 }
 
+/**
+* Example for payment
+* EntityRef{
+*   id = "2LgwiBIRSnA"
+*   external_id = "51d01a7e-cb25-4019-8b14-ee6bfe9bfdde"
+*   issuer = "c448c2ca-be73-45f5-b550-c61c7f799d70"
+*   scope = "payment"
+*   sub = EntityRef{
+*       id = "1"
+*   }
+* }
+***
+* Example for withdrawal
+* EntityRef{
+*   id = "1707419"
+*   external_id = "100276096799"
+*   issuer = "c448c2ca-be73-45f5-b550-c61c7f799d70"
+*   scope = "withdrawal"
+* }
+*/
+struct EntityRef {
+    1: required InternalID id
+    /// ???
+    /// нужен ли здесь внешний идентификатор
+    /// по идее при массовом поиске нужно будет понимать
+    /// какому из запрошенных идентификаторов соответствует возвращенный экземпляр
+    /// ???
+    2: required PlainExternalID external_id
+    /// aka party_id
+    3: required string issuer
+    4: required string scope
+    /// For nested enities, for example payment
+    5: optional SubEntityRef sub
+}
+
+struct SubEntityRef {
+    1: required InternalID id
+    2: optional SubEntityRef sub
+}
+
+struct GenerationInfo {
+    1: required PlainExternalID identifier
+    2: required string issuer
+    3: required string scope
+}
+
+/// ???
+/// пагинацией предлагаю не заморачиваться
+/// так как для поиска всё равно передаётся пачка идентификаторов
+/// то разбиение их на последовательность запросов разумных размеров
+/// можно возложить на клиента
+/// (тем более, что это наши же сервисы, а сам "нечёткий" массовый поиск пока только для внутреннего пользования)
+/// ???
+struct SearchParams {
+    // The search logic will be similar to this query:
+    // SELECT * FROM Entities WHERE
+    // (id IN ids OR external_id IN ids)
+    1: required set<BaseID> ids
+    // AND issuer IN issuers
+    2: optional set<string> issuers
+    // AND scope IN scopes
+    3: optional set<string> scopes
+}
+
+/// ???
+/// Если отказаться от external_id внутри EntityRef
+/// то ответ придется формировать через мапу вида:
+/// map<BaseID, set<EntityRef>>
+/// где BaseID - идентификатор, который был в параметрах поиска (может быть как внутренним, так и внешним)
+/// но это кажется ненужным усложнением
+/// ???
+struct SearchInternalsResult {
+    1: required set<EntityRef> refs
+}
+
 service Bender {
 
     /**
@@ -106,6 +192,16 @@ service Bender {
     * This operation will fail when there's no such binding, in contrast to `GenerateID`.
     */
     GetInternalIDResult GetInternalID (1: ExternalID external_id)
+        throws (1: InternalIDNotFound ex1)
+
+    GenerationResult IssueID (
+        1: ExternalID external_id,
+        2: GenerationSchema schema,
+        3: msgpack.Value context,
+        4: GenerationInfo info
+    )
+
+    SearchInternalsResult SearchInternals (1: SearchParams params)
         throws (1: InternalIDNotFound ex1)
 }
 
